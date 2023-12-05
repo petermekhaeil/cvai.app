@@ -34,6 +34,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@melt-ui/svelte": "^0.64.4",
 		"ai": "^2.2.27",
 		"bits-ui": "^0.9.9",
 		"clsx": "^2.0.0",

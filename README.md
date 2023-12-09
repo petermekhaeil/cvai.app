@@ -7,8 +7,9 @@ AI-powered resume and cover letter builder.
 This site uses OpenAI’s new [GPT-4 with Vision](https://platform.openai.com/docs/guides/vision) model.
 
 - [SvelteKit](https://kit.svelte.dev/)
-- [Vercel AI SDK](https://sdk.vercel.ai/docs)
 - [Svelte port of Shadcn UI](https://www.shadcn-svelte.com/)
+- [Vercel AI SDK](https://sdk.vercel.ai/docs)
+- [Vercel KV](https://vercel.com/storage/kv)
 
 ## Running Locally
 

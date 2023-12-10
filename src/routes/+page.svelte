@@ -287,6 +287,15 @@
 				</div>
 				<div>
 					<Button
+						href="https://github.com/petermekhaeil/cvai.app/issues/new?template=feature_request.yml"
+						variant="link"
+						target="_blank"
+						class="inline-flex items-center text-zinc-500"
+					>
+						<span>Feature Request</span>
+						<ExternalLink class="ml-1 h-3 w-3" />
+					</Button>
+					<Button
 						href="https://github.com/petermekhaeil/cvai.app"
 						variant="link"
 						target="_blank"

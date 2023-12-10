@@ -199,6 +199,9 @@
 												</a>.
 											</p>
 											<p class="mb-2 leading-normal text-muted-foreground">
+												This key is only used in your browser and is not stored on the server.
+											</p>
+											<p class="mb-2 leading-normal text-muted-foreground">
 												Read the <a
 													href="https://github.com/petermekhaeil/cvai.app"
 													class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
@@ -220,11 +223,9 @@
 							<div class="py-6 px-4 lg:px-6 flex-grow w-full">
 								{#if $messages.length > 0}
 									<div
-										class="w-full text-black bg-zinc-50 h-[calc(100vh-151px)] border-none focus:ring-0 focus:border-black pb-16 px-0 rounded-lg resize-none whitespace-pre-wrap overflow-y-scroll"
+										class="w-full text-black bg-zinc-50 border-none focus:ring-0 focus:border-black pb-16 px-0 rounded-lg resize-none whitespace-pre-wrap flex flex-col"
 									>
-										<div
-											class="flex flex-1 items-center justify-end pb-0.5 sticky top-0 bg-zinc-50"
-										>
+										<div class="flex items-center justify-end pb-0.5 sticky top-0 bg-zinc-50">
 											{#if lastAssistantMessage}
 												<button
 													type="button"
@@ -298,7 +299,7 @@
 						href="https://twitter.com/petermekh"
 						variant="link"
 						target="_blank"
-						class="inline-flex items-center text-zinc-500"
+						class="items-center text-zinc-500 hidden md:inline-flex"
 					>
 						<span>By Peter Mekhaeil</span>
 						<ExternalLink class="ml-1 h-3 w-3" />

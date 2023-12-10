@@ -2,9 +2,12 @@
 
 AI-powered resume and cover letter builder.
 
+Visit: [www.cvai.app](https://www.cvai.app/)
+
 ## How it works
 
 This site uses OpenAI’s new [GPT-4 with Vision](https://platform.openai.com/docs/guides/vision) model.
+It first converts the PDF to an image, constructs a prompt based on the resume and the job description, sends it to GPT-4 API, then streams the response back to the application.
 
 - [SvelteKit](https://kit.svelte.dev/)
 - [Svelte port of Shadcn UI](https://www.shadcn-svelte.com/)
@@ -13,7 +16,7 @@ This site uses OpenAI’s new [GPT-4 with Vision](https://platform.openai.com/do
 
 ## Running Locally
 
-After cloning the repo, go to [OpenAI](https://beta.openai.com/account/api-keys) to make an account and put your API key in a file called `.env.local`.
+After cloning the repo, go to [OpenAI](https://platform.openai.com/api-keys) to make an account and put your API key in a file called `.env.local`.
 
 ```
 OPENAI_API_KEY=

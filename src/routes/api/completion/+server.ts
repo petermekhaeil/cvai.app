@@ -1,11 +1,30 @@
 import OpenAI from 'openai';
 import { OpenAIStream, StreamingTextResponse } from 'ai';
-import { OPENAI_API_KEY } from '$env/static/private';
+import { OPENAI_API_KEY, KV_REST_API_URL, KV_REST_API_TOKEN } from '$env/static/private';
 import { json } from '@sveltejs/kit';
+import { Ratelimit } from '@upstash/ratelimit';
+import { building } from '$app/environment';
+import { createClient, type VercelKV } from '@vercel/kv';
 
 export const config = {
 	runtime: 'edge'
 };
+
+let kv: VercelKV;
+let ratelimit: Ratelimit;
+
+if (!building && KV_REST_API_URL && KV_REST_API_TOKEN) {
+	kv = createClient({
+		url: KV_REST_API_URL,
+		token: KV_REST_API_TOKEN
+	});
+
+	ratelimit = new Ratelimit({
+		redis: kv,
+		// rate limit to 5 requests per 24 hours
+		limiter: Ratelimit.slidingWindow(5, '1440 m')
+	});
+}
 
 const systemPrompt = `
 You are a professional job head hunter who is paid highly to write cover letters for job applicants
@@ -29,14 +48,36 @@ The letter should be concise, well-structured, and free of errors.
 - Write only one paragraph per previous job.
  `;
 
-export async function POST({ request }) {
-	const { data, messages } = await request.json();
+export async function POST(event) {
+	if (KV_REST_API_URL && KV_REST_API_TOKEN) {
+		const ip = event.getClientAddress();
+
+		const { success, limit, reset, remaining } = await ratelimit.limit(`ratelimit_${ip}`);
+
+		if (!success) {
+			return new Response(
+				JSON.stringify({
+					message: 'You have reached your request limit for the day.'
+				}),
+				{
+					status: 429,
+					headers: {
+						'X-RateLimit-Limit': limit.toString(),
+						'X-RateLimit-Remaining': remaining.toString(),
+						'X-RateLimit-Reset': reset.toString()
+					}
+				}
+			);
+		}
+	}
+
+	const { data, messages } = await event.request.json();
 
 	const currentMessage = messages[messages.length - 1];
 	const jobDescription = currentMessage.content;
 
 	const dataApiKey = data.apiKey || '';
-	const dataImageUrl = data.imageUrl
+	const dataImageUrl = data.imageUrl;
 	const apiKey = dataApiKey !== '' ? dataApiKey : OPENAI_API_KEY;
 
 	const openai = new OpenAI({

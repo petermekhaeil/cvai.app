@@ -35,6 +35,9 @@
 	"type": "module",
 	"dependencies": {
 		"@melt-ui/svelte": "^0.64.4",
+		"@upstash/ratelimit": "^1.0.0",
+		"@upstash/redis": "^1.25.1",
+		"@vercel/kv": "^1.0.1",
 		"ai": "^2.2.27",
 		"bits-ui": "^0.9.9",
 		"clsx": "^2.0.0",

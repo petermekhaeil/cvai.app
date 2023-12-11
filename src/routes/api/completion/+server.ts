@@ -1,10 +1,14 @@
 import OpenAI from 'openai';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
+import { OpenAIStream, StreamingTextResponse, type Message } from 'ai';
 import { OPENAI_API_KEY, KV_REST_API_URL, KV_REST_API_TOKEN } from '$env/static/private';
 import { json } from '@sveltejs/kit';
 import { Ratelimit } from '@upstash/ratelimit';
 import { building } from '$app/environment';
 import { createClient, type VercelKV } from '@vercel/kv';
+import type {
+	ChatCompletionContentPartImage,
+	ChatCompletionCreateParams
+} from 'openai/resources/index.mjs';
 
 export const config = {
 	runtime: 'edge'
@@ -48,6 +52,11 @@ The letter should be concise, well-structured, and free of errors.
 - Write only one paragraph per previous job.
  `;
 
+type RequestPayload = {
+	data: Record<string, string>;
+	messages: Message[];
+};
+
 export async function POST(event) {
 	if (KV_REST_API_URL && KV_REST_API_TOKEN) {
 		const ip = event.getClientAddress();
@@ -71,21 +80,37 @@ export async function POST(event) {
 		}
 	}
 
-	const { data, messages } = await event.request.json();
+	const { data, messages } = (await event.request.json()) as RequestPayload;
 
 	const currentMessage = messages[messages.length - 1];
 	const jobDescription = currentMessage.content;
 
 	const dataApiKey = data.apiKey || '';
-	const dataImageUrl = data.imageUrl;
 	const apiKey = dataApiKey !== '' ? dataApiKey : OPENAI_API_KEY;
 
 	const openai = new OpenAI({
 		apiKey
 	});
 
+	const totalPages = Number(data.totalPages);
+	const pagesExist = [];
+
+	for (let i = 0; i < totalPages; i++) {
+		const key = `page_${i + 1}`;
+		if (Object.prototype.hasOwnProperty.call(data, key)) {
+			pagesExist.push(key);
+		}
+	}
+
 	try {
-		const response = await openai.chat.completions.create({
+		const imageContents: ChatCompletionContentPartImage[] = pagesExist.map((page) => {
+			return {
+				type: 'image_url',
+				image_url: { url: data[page], detail: 'high' }
+			};
+		});
+
+		const params: ChatCompletionCreateParams = {
 			model: 'gpt-4-vision-preview',
 			stream: true,
 			max_tokens: 4096,
@@ -101,14 +126,13 @@ export async function POST(event) {
 							type: 'text',
 							text: `This is my resume. Write me a cover letter for this job posting: ${jobDescription}`
 						},
-						{
-							type: 'image_url',
-							image_url: { url: dataImageUrl, detail: 'high' }
-						}
+						...imageContents
 					]
 				}
 			]
-		});
+		};
+
+		const response = await openai.chat.completions.create(params);
 
 		const stream = OpenAIStream(response);
 		return new StreamingTextResponse(stream);

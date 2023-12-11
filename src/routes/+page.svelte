@@ -80,15 +80,24 @@
 	};
 
 	const handleGenerate = (e: SubmitEvent) => {
-		if (convertedImages.length > 0) {
-			handleSubmit(e, {
-				data: {
-					apiKey: apiKey,
-					// TODO: need to add all images
-					imageUrl: convertedImages[0]
-				}
-			});
+		if (convertedImages.length === 0) {
+			return false;
 		}
+
+		const data: Record<string, string> = {
+			apiKey: apiKey
+		};
+
+		for (let i = 0; i < convertedImages.length; i++) {
+			console.log(i, convertedImages[i]);
+			const image = convertedImages[i];
+			const key = `page_${i + 1}`;
+			data[key] = image;
+		}
+
+		data['totalPages'] = convertedImages.length.toString();
+
+		handleSubmit(e, { data });
 	};
 
 	const handleStartOver = () => {
@@ -141,10 +150,10 @@
 					<div class="relative py-4 px-4 flex-initial flex flex-col md:w-[760px]">
 						<div class="grid w-full items-center gap-4 overflow-hidden">
 							{#if convertedImages.length > 0}
-								<div class="h-64 flex justify-center">
-									<!-- {#each convertedImages as convertedImage} -->
-									<img class="h-full object-cover shadow-md" src={convertedImages[0]} alt="" />
-									<!-- {/each} -->
+								<div class="h-64 flex justify-center gap-4">
+									{#each convertedImages as convertedImage}
+										<img class="h-full object-cover shadow-md" src={convertedImage} alt="" />
+									{/each}
 								</div>
 							{:else}
 								<FileDrop handleFiles={handleFileSelect} name="resume">

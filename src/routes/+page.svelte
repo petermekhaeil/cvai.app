@@ -9,6 +9,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { addToast } from '$lib/components/ui/toast/toaster.svelte';
 	import FileDrop from '$lib/components/file-drop.svelte';
+	import ImageCarousel from '$lib/components/image-carousel.svelte';
 
 	pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -98,15 +99,6 @@
 			return false;
 		}
 
-		if (apiKey === '') {
-			addToast({
-				title: 'Error',
-				description: 'Please enter your OpenAI API key',
-				variant: 'destructive'
-			});
-			return false;
-		}
-
 		const data: Record<string, string> = {
 			apiKey: apiKey
 		};
@@ -173,11 +165,7 @@
 					<div class="relative py-4 px-4 flex-initial flex flex-col md:w-[760px]">
 						<div class="grid w-full items-center gap-4 overflow-hidden">
 							{#if convertedImages.length > 0}
-								<div class="h-64 flex justify-center gap-4">
-									{#each convertedImages as convertedImage}
-										<img class="h-full object-cover shadow-md" src={convertedImage} alt="" />
-									{/each}
-								</div>
+								<ImageCarousel images={convertedImages} />
 							{:else}
 								<FileDrop handleFiles={handleFileSelect} name="resume">
 									<div class="flex items-center justify-center w-full">
@@ -212,7 +200,7 @@
 								/>
 								<Dialog.Root>
 									<Dialog.Trigger>
-										<HelpCircle class="w-5 h-5" />
+										<HelpCircle />
 									</Dialog.Trigger>
 									<Dialog.Content class="md:w-[600px]">
 										<Dialog.Header>
@@ -264,7 +252,7 @@
 													on:click={handleCopy}
 													class="block p-1 text-sm font-semibold rounded-md cursor-default text-zinc-500 sm:leading-6 hover:bg-zinc-100 hover:text-zinc-900 disabled:text-zinc-300 disabled:hover:bg-transparent disabled:cursor-not-allowed"
 												>
-													<Copy class="w-5 h-5" />
+													<Copy />
 												</button>
 											{/if}
 										</div>
@@ -331,7 +319,7 @@
 						href="https://github.com/petermekhaeil/cvai.app"
 						variant="link"
 						target="_blank"
-						class="inline-flex items-center text-zinc-500"
+						class="items-center text-zinc-500 hidden md:inline-flex"
 					>
 						<span>Source code</span>
 						<ExternalLink class="ml-1 h-3 w-3" />

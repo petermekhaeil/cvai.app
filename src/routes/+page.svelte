@@ -81,6 +81,29 @@
 
 	const handleGenerate = (e: SubmitEvent) => {
 		if (convertedImages.length === 0) {
+			addToast({
+				title: 'Error',
+				description: 'Please upload a PDF resume',
+				variant: 'destructive'
+			});
+			return false;
+		}
+
+		if ($input === '') {
+			addToast({
+				title: 'Error',
+				description: 'Please enter a job description',
+				variant: 'destructive'
+			});
+			return false;
+		}
+
+		if (apiKey === '') {
+			addToast({
+				title: 'Error',
+				description: 'Please enter your OpenAI API key',
+				variant: 'destructive'
+			});
 			return false;
 		}
 

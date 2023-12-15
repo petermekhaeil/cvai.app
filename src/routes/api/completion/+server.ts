@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import { OpenAIStream, StreamingTextResponse, type Message } from 'ai';
 import { OPENAI_API_KEY, KV_REST_API_URL, KV_REST_API_TOKEN } from '$env/static/private';
-import { json } from '@sveltejs/kit';
+import { json, error } from '@sveltejs/kit';
 import { Ratelimit } from '@upstash/ratelimit';
 import { building } from '$app/environment';
 import { createClient, type VercelKV } from '@vercel/kv';
@@ -58,6 +58,13 @@ type RequestPayload = {
 };
 
 export async function POST(event) {
+	const { locals: { supabase, getSession } } = event;
+	const session = await getSession();
+
+	if (!session) {
+		throw error(401, { message: 'Login required.' });
+	}
+
 	if (KV_REST_API_URL && KV_REST_API_TOKEN) {
 		const ip = event.getClientAddress();
 
@@ -79,6 +86,25 @@ export async function POST(event) {
 			);
 		}
 	}
+
+	const { data: user } = await supabase
+		.from('users')
+		.select('credits')
+		.eq('id', session.user.id)
+		.single();
+
+	if (!user) {
+		throw error(400, { message: 'User not found.' });
+	}
+
+	if (user.credits === 0) {
+		throw error(400, { message: 'You have no generations left' });
+	}
+
+	await supabase
+		.from('users')
+		.update({ credits: user.credits - 1 })
+		.eq('id', session.user.id);
 
 	const { data, messages } = (await event.request.json()) as RequestPayload;
 

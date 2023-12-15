@@ -104,7 +104,6 @@
 		};
 
 		for (let i = 0; i < convertedImages.length; i++) {
-			console.log(i, convertedImages[i]);
 			const image = convertedImages[i];
 			const key = `page_${i + 1}`;
 			data[key] = image;

@@ -139,7 +139,7 @@ export async function POST(event) {
 	} catch (error) {
 		if (error instanceof OpenAI.APIError) {
 			const { name, status, headers, message } = error;
-			throw json({ name, status, headers, message }, { status });
+			return json({ name, status, headers, message }, { status });
 		} else {
 			throw error;
 		}

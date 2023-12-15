@@ -14,7 +14,7 @@
 	pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 	export let data;
-	let { session } = data;
+	let { session, useOwnKey } = data;
 	$: ({ session } = data);
 
 	let convertedImages: string[] = [];
@@ -203,37 +203,26 @@
 								spellcheck="false"
 								class="h-full min-h-[256px] rounded-md flex-1 sm:text-sm text-base bg-gray-50 border border-zinc-300 hover:border-zinc-300 resize-none scroll-m-2 transition-colors focus:border-gray-400 focus:ring-0 focus:outline-none pb-12 focus-visible:ring-0"
 							/>
-							<div class="flex gap-4">
-								<Input
-									type="text"
-									placeholder="Your OpenAI API Key"
-									bind:value={apiKey}
-									class="bg-gray-50 border border-zinc-300 hover:border-zinc-300 focus-visible:ring-0 focus:border-gray-400 focus:ring-0 focus:outline-none"
-								/>
-								<Dialog.Root>
-									<Dialog.Trigger>
-										<HelpCircle />
-									</Dialog.Trigger>
-									<Dialog.Content class="md:min-w-[800px]">
-										<Dialog.Header>
-											<Dialog.Title>OpenAI API Key</Dialog.Title>
-										</Dialog.Header>
-										<div class="grid gap-4 py-4">
-											<p class="mb-2 leading-normal text-muted-foreground">
-												This site uses OpenAI’s new GPT-4 with Vision model. You will need to create
-												an OpenAI account and get your API key from
-												<a
-													href="https://platform.openai.com"
-													target="_blank"
-													class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
-												>
-													<span>platform.openai.com</span>
-													<ExternalLink class="h-3 w-3" />
-												</a>.
-											</p>
-											<ul class="ml-6 list-decimal [&>li]:mt-2 text-muted-foreground">
-												<li>
-													Create an OpenAI account at
+							{#if useOwnKey}
+								<div class="flex gap-4">
+									<Input
+										type="text"
+										placeholder="Your OpenAI API Key"
+										bind:value={apiKey}
+										class="bg-gray-50 border border-zinc-300 hover:border-zinc-300 focus-visible:ring-0 focus:border-gray-400 focus:ring-0 focus:outline-none"
+									/>
+									<Dialog.Root>
+										<Dialog.Trigger>
+											<HelpCircle />
+										</Dialog.Trigger>
+										<Dialog.Content class="md:min-w-[800px]">
+											<Dialog.Header>
+												<Dialog.Title>OpenAI API Key</Dialog.Title>
+											</Dialog.Header>
+											<div class="grid gap-4 py-4">
+												<p class="mb-2 leading-normal text-muted-foreground">
+													This site uses OpenAI’s new GPT-4 with Vision model. You will need to
+													create an OpenAI account and get your API key from
 													<a
 														href="https://platform.openai.com"
 														target="_blank"
@@ -241,52 +230,65 @@
 													>
 														<span>platform.openai.com</span>
 														<ExternalLink class="h-3 w-3" />
-													</a>
-												</li>
-												<li>
-													In your OpenAI API account, navigate to
-													<a
-														href="https://platform.openai.com/account/billing/overview"
-														target="_blank"
+													</a>.
+												</p>
+												<ul class="ml-6 list-decimal [&>li]:mt-2 text-muted-foreground">
+													<li>
+														Create an OpenAI account at
+														<a
+															href="https://platform.openai.com"
+															target="_blank"
+															class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
+														>
+															<span>platform.openai.com</span>
+															<ExternalLink class="h-3 w-3" />
+														</a>
+													</li>
+													<li>
+														In your OpenAI API account, navigate to
+														<a
+															href="https://platform.openai.com/account/billing/overview"
+															target="_blank"
+															class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
+														>
+															<span>Settings > Billing</span>
+															<ExternalLink class="h-3 w-3" />
+														</a>
+													</li>
+													<li>Click Add to credit balance</li>
+													<li>Add at least $5 to your account</li>
+													<li>
+														Navigate to
+														<a
+															href="https://platform.openai.com/api-keys"
+															target="_blank"
+															class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
+														>
+															<span>API Keys</span>
+															<ExternalLink class="h-3 w-3" />
+														</a>
+													</li>
+													<li>Click Create new secret key</li>
+													<li>Copy the key to your clipboard.</li>
+													<li>Back on cvai.app, paste the key into the API key text box</li>
+												</ul>
+												<p class="mb-2 leading-normal text-muted-foreground">
+													This key is only used in your browser and is not stored on the server.
+												</p>
+												<p class="mb-2 leading-normal text-muted-foreground">
+													Read the <a
+														href="https://github.com/petermekhaeil/cvai.app"
 														class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
 													>
-														<span>Settings > Billing</span>
+														<span>source code</span>
 														<ExternalLink class="h-3 w-3" />
-													</a>
-												</li>
-												<li>Click Add to credit balance</li>
-												<li>Add at least $5 to your account</li>
-												<li>
-													Navigate to
-													<a
-														href="https://platform.openai.com/api-keys"
-														target="_blank"
-														class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
-													>
-														<span>API Keys</span>
-														<ExternalLink class="h-3 w-3" />
-													</a>
-												</li>
-												<li>Click Create new secret key</li>
-												<li>Copy the key to your clipboard.</li>
-												<li>Back on cvai.app, paste the key into the API key text box</li>
-											</ul>
-											<p class="mb-2 leading-normal text-muted-foreground">
-												This key is only used in your browser and is not stored on the server.
-											</p>
-											<p class="mb-2 leading-normal text-muted-foreground">
-												Read the <a
-													href="https://github.com/petermekhaeil/cvai.app"
-													class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
-												>
-													<span>source code</span>
-													<ExternalLink class="h-3 w-3" />
-												</a> to see how your data is used.
-											</p>
-										</div>
-									</Dialog.Content>
-								</Dialog.Root>
-							</div>
+													</a> to see how your data is used.
+												</p>
+											</div>
+										</Dialog.Content>
+									</Dialog.Root>
+								</div>
+							{/if}
 						</div>
 					</div>
 					<div

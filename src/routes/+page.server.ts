@@ -1,9 +1,12 @@
-import {  redirect } from '@sveltejs/kit'
+import { redirect } from '@sveltejs/kit'
+import { OPENAI_API_KEY } from '$env/static/private';
 
 export const load = async ({ locals: { getSession } }) => {
   const session = await getSession()
 
-  return { session }
+  const useOwnKey = OPENAI_API_KEY === '';
+
+  return { session, useOwnKey }
 }
 
 export const actions = {

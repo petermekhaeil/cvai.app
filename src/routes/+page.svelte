@@ -201,14 +201,15 @@
 									<Dialog.Trigger>
 										<HelpCircle />
 									</Dialog.Trigger>
-									<Dialog.Content class="md:w-[600px]">
+									<Dialog.Content class="md:min-w-[800px]">
 										<Dialog.Header>
 											<Dialog.Title>OpenAI API Key</Dialog.Title>
 										</Dialog.Header>
 										<div class="grid gap-4 py-4">
 											<p class="mb-2 leading-normal text-muted-foreground">
 												This site uses OpenAI’s new GPT-4 with Vision model. You will need to create
-												an OpenAI account and get your API key from <a
+												an OpenAI account and get your API key from
+												<a
 													href="https://platform.openai.com"
 													target="_blank"
 													class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
@@ -217,6 +218,46 @@
 													<ExternalLink class="h-3 w-3" />
 												</a>.
 											</p>
+											<ul class="ml-6 list-decimal [&>li]:mt-2 text-muted-foreground">
+												<li>
+													Create an OpenAI account at
+													<a
+														href="https://platform.openai.com"
+														target="_blank"
+														class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
+													>
+														<span>platform.openai.com</span>
+														<ExternalLink class="h-3 w-3" />
+													</a>
+												</li>
+												<li>
+													In your OpenAI API account, navigate to
+													<a
+														href="https://platform.openai.com/account/billing/overview"
+														target="_blank"
+														class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
+													>
+														<span>Settings > Billing</span>
+														<ExternalLink class="h-3 w-3" />
+													</a>
+												</li>
+												<li>Click Add to credit balance</li>
+												<li>Add at least $5 to your account</li>
+												<li>
+													Navigate to
+													<a
+														href="https://platform.openai.com/api-keys"
+														target="_blank"
+														class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
+													>
+														<span>API Keys</span>
+														<ExternalLink class="h-3 w-3" />
+													</a>
+												</li>
+												<li>Click Create new secret key</li>
+												<li>Copy the key to your clipboard.</li>
+												<li>Back on cvai.app, paste the key into the API key text box</li>
+											</ul>
 											<p class="mb-2 leading-normal text-muted-foreground">
 												This key is only used in your browser and is not stored on the server.
 											</p>

@@ -13,6 +13,10 @@
 
 	pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
+	export let data;
+	let { session } = data;
+	$: ({ session } = data);
+
 	let convertedImages: string[] = [];
 	let numPages = 0;
 	let lastAssistantMessage: Message | null = null;
@@ -156,6 +160,15 @@
 <div class="antialiased flex flex-col lg:block w-full">
 	<div class="sticky top-0 bg-white z-30 px-4 flex items-center justify-between py-2 border-b">
 		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight">📝 cvAI</h1>
+		<div class="flex justify-end flex-1 space-x-8">
+			{#if session}
+				<form method="post" action="?/signout">
+					<Button variant="link" type="submit">Sign Out</Button>
+				</form>
+			{:else}
+				<Button href="/signin">Sign in</Button>
+			{/if}
+		</div>
 	</div>
 	<div class="flex-1 min-h-[calc(100svh-51px)] flex flex-col">
 		<form class="flex-1 flex flex-col" on:submit={handleGenerate}>

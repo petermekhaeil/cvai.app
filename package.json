@@ -34,6 +34,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@auth/core": "^0.18.6",
+		"@auth/supabase-adapter": "^0.1.12",
+		"@auth/sveltekit": "^0.4.0",
 		"@melt-ui/svelte": "^0.64.4",
 		"@supabase/auth-ui-shared": "^0.1.8",
 		"@supabase/auth-ui-svelte": "^0.2.8",

@@ -24,11 +24,14 @@ export const GET = async (event) => {
 
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
 
+    console.log('does this log get picked up on vercel??')
     console.log(data);
     console.log(error);
+
     if (!error) {
       throw redirect(303, `/${next.slice(1)}`);
     }
+
     console.error(error);
   }
 

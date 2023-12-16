@@ -1,8 +1,24 @@
 import { redirect } from '@sveltejs/kit'
 import { OPENAI_API_KEY } from '$env/static/private';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
+import { createServerClient } from '@supabase/ssr'
 
-export const load = async ({ locals: { supabase, getSession } }) => {
-  const session = await getSession()
+export const load = async (event) => {
+  const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+    cookies: {
+      get: (key) => event.cookies.get(key),
+      set: (key, value, options) => {
+        event.cookies.set(key, value, options)
+      },
+      remove: (key, options) => {
+        event.cookies.delete(key, options)
+      },
+    },
+  })
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
   const useOwnKey = OPENAI_API_KEY === '';
 

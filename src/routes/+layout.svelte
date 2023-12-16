@@ -31,5 +31,6 @@
 	<meta name="twitter:creator" content="@petermekh" />
 	<meta name="twitter:site" content="@petermekh" /><meta name="twitter:title" content="cvAI" />
 	<meta name="twitter:description" content="AI-powered resume and cover letter builder." />
+	<meta name="twitter:image" content="https://www.cvai.app/og.png" />
 	<link rel="icon" href="https://fav.farm/📝" />
 </svelte:head>

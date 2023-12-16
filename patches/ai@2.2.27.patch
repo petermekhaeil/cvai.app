@@ -1,0 +1,117 @@
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 4b15383cc87568a9c756d122a6f8c825b4324b6d..419cb30549c92c88559f1d00ab3a3d691a6dbc97 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -150,6 +150,10 @@ type UseChatOptions = {
+      * handle the extra fields before forwarding the request to the AI service.
+      */
+     sendExtraMessageFields?: boolean;
++    /**
++     * Whether to clear the input after the form is submitted. Defaults to `true`.
++     */
++    clearInputOnSubmit?: boolean;
+ };
+ type UseCompletionOptions = {
+     /**
+diff --git a/svelte/dist/index.d.ts b/svelte/dist/index.d.ts
+index ebedc21d56287dc3bd589b43071ae30431eb5dd9..5068ff3a4153cc396877450594f06ae241160d33 100644
+--- a/svelte/dist/index.d.ts
++++ b/svelte/dist/index.d.ts
+@@ -150,6 +150,10 @@ type UseChatOptions = {
+      * handle the extra fields before forwarding the request to the AI service.
+      */
+     sendExtraMessageFields?: boolean;
++    /**
++     * Whether to clear the input after the form is submitted. Defaults to `true`.
++     */
++    clearInputOnSubmit?: boolean;
+ };
+ type UseCompletionOptions = {
+     /**
+@@ -249,7 +253,7 @@ type UseChatHelpers = {
+     /** Additional data added on the server via StreamData */
+     data: Readable<JSONValue[] | undefined>;
+ };
+-declare function useChat({ api, id, initialMessages, initialInput, sendExtraMessageFields, experimental_onFunctionCall, onResponse, onFinish, onError, credentials, headers, body, generateId, }?: UseChatOptions): UseChatHelpers;
++declare function useChat({ api, id, initialMessages, initialInput, sendExtraMessageFields, experimental_onFunctionCall, onResponse, onFinish, onError, credentials, headers, body, generateId, clearInputOnSubmit }?: UseChatOptions): UseChatHelpers;
+ 
+ type UseCompletionHelpers = {
+     /** The current completion result */
+diff --git a/svelte/dist/index.js b/svelte/dist/index.js
+index c4dc7a242aeac6b54ddbb8200f56b82cdaddcf9c..06c70a97a0ed5ddb6c5ab35c7b7f3d4f6520a90c 100644
+--- a/svelte/dist/index.js
++++ b/svelte/dist/index.js
+@@ -938,6 +938,7 @@ var getStreamedResponse = async (api, chatRequest, mutate, mutateStreamData, exi
+     api,
+     messages: constructedMessagesPayload,
+     body: {
++      data: chatRequest.data,
+       ...extraMetadata.body,
+       ...(_a = chatRequest.options) == null ? void 0 : _a.body,
+       ...chatRequest.functions !== void 0 && {
+@@ -1053,13 +1054,14 @@ function useChat({
+       loading.set(false);
+     }
+   }
+-  const append = async (message, { options, functions, function_call } = {}) => {
++  const append = async (message, { options, functions, function_call, data } = {}) => {
+     if (!message.id) {
+       message.id = generateId();
+     }
+     const chatRequest = {
+       messages: (0, import_store.get)(messages).concat(message),
+       options,
++      data,
+       ...functions !== void 0 && { functions },
+       ...function_call !== void 0 && { function_call }
+     };
+diff --git a/svelte/dist/index.mjs b/svelte/dist/index.mjs
+index 5e35452d3cd85255d2287f61131bd501cbaf46d5..81bb7980f5eede8e8f7180ca8d2c58be06dbe190 100644
+--- a/svelte/dist/index.mjs
++++ b/svelte/dist/index.mjs
+@@ -911,6 +911,7 @@ var getStreamedResponse = async (api, chatRequest, mutate, mutateStreamData, exi
+     api,
+     messages: constructedMessagesPayload,
+     body: {
++      data: chatRequest.data,
+       ...extraMetadata.body,
+       ...(_a = chatRequest.options) == null ? void 0 : _a.body,
+       ...chatRequest.functions !== void 0 && {
+@@ -956,7 +957,8 @@ function useChat({
+   credentials,
+   headers,
+   body,
+-  generateId = nanoid
++  generateId = nanoid,
++  clearInputOnSubmit = true
+ } = {}) {
+   const chatId = id || `chat-${uniqueId++}`;
+   const key = `${api}|${chatId}`;
+@@ -1026,13 +1028,14 @@ function useChat({
+       loading.set(false);
+     }
+   }
+-  const append = async (message, { options, functions, function_call } = {}) => {
++  const append = async (message, { options, functions, function_call, data } = {}) => {
+     if (!message.id) {
+       message.id = generateId();
+     }
+     const chatRequest = {
+       messages: get(messages).concat(message),
+       options,
++      data,
+       ...functions !== void 0 && { functions },
+       ...function_call !== void 0 && { function_call }
+     };
+@@ -1087,7 +1090,10 @@ function useChat({
+       },
+       options
+     );
+-    input.set("");
++
++    if (clearInputOnSubmit) {
++      input.set("");
++    }
+   };
+   const isLoading = derived(
+     [isSWRLoading, loading],

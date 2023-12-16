@@ -38,8 +38,23 @@ export const load = async (event) => {
 }
 
 export const actions = {
-  signout: async ({ locals: { supabase, getSession } }) => {
-    const session = await getSession()
+  signout: async (event) => {
+    const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+      cookies: {
+        get: (key) => event.cookies.get(key),
+        set: (key, value, options) => {
+          event.cookies.set(key, value, options)
+        },
+        remove: (key, options) => {
+          event.cookies.delete(key, options)
+        },
+      },
+    })
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+
     if (session) {
       await supabase.auth.signOut()
       throw redirect(303, '/')

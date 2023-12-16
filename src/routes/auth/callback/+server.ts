@@ -11,18 +11,21 @@ export const GET = async (event) => {
 
   if (code) {
     const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-        cookies: {
-          get: (key) => event.cookies.get(key),
-          set: (key, value, options) => {
-            event.cookies.set(key, value, options)
-          },
-          remove: (key, options) => {
-            event.cookies.delete(key, options)
-          },
+      cookies: {
+        get: (key) => event.cookies.get(key),
+        set: (key, value, options) => {
+          event.cookies.set(key, value, options)
         },
-      })
+        remove: (key, options) => {
+          event.cookies.delete(key, options)
+        },
+      },
+    })
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+
+    console.log(data);
+    console.log(error);
     if (!error) {
       throw redirect(303, `/${next.slice(1)}`);
     }

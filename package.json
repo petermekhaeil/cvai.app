@@ -35,9 +35,9 @@
 	"type": "module",
 	"dependencies": {
 		"@melt-ui/svelte": "^0.64.4",
-		"@supabase/auth-helpers-sveltekit": "^0.10.7",
 		"@supabase/auth-ui-shared": "^0.1.8",
 		"@supabase/auth-ui-svelte": "^0.2.8",
+		"@supabase/ssr": "^0.0.10",
 		"@supabase/supabase-js": "^2.39.0",
 		"@upstash/ratelimit": "^1.0.0",
 		"@upstash/redis": "^1.25.1",

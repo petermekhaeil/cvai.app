@@ -58,7 +58,7 @@ type RequestPayload = {
 };
 
 export async function POST(event) {
-	const { locals: { getSession } } = event;
+	const { locals: { supabase, getSession } } = event;
 	const session = await getSession();
 
 	if (!session?.user) {
@@ -87,24 +87,24 @@ export async function POST(event) {
 		}
 	}
 
-	// const { data: user } = await supabase
-	// 	.from('users')
-	// 	.select('credits')
-	// 	.eq('id', session.user.id)
-	// 	.single();
+	const { data: user } = await supabase
+		.from('users')
+		.select('*')
+		.eq('id', session.user.id)
+		.single();
 
-	// if (!user) {
-	// 	throw error(400, { message: 'User not found.' });
-	// }
+	if (!user) {
+		throw error(400, { message: 'User not found.' });
+	}
 
-	// if (user.credits === 0) {
-	// 	throw error(400, { message: 'You have no generations left' });
-	// }
+	if (user.credits === 0) {
+		throw error(400, { message: 'You have no generations left' });
+	}
 
-	// await supabase
-	// 	.from('users')
-	// 	.update({ credits: user.credits - 1 })
-	// 	.eq('id', session.user.id);
+	await supabase
+		.from('users')
+		.update({ credits: user.credits - 1 })
+		.eq('id', session.user.id);
 
 	const { data, messages } = (await event.request.json()) as RequestPayload;
 

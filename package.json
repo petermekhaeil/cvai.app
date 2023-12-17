@@ -48,6 +48,7 @@
 		"ai": "^2.2.27",
 		"bits-ui": "^0.9.9",
 		"clsx": "^2.0.0",
+		"jose": "^5.1.3",
 		"lucide-svelte": "^0.294.0",
 		"openai": "^4.20.1",
 		"pdfjs-dist": "^4.0.269",
@@ -56,7 +57,7 @@
 	},
 	"pnpm": {
 		"patchedDependencies": {
-			"ai@2.2.27": "patches/ai@2.2.27.patch"
+			"ai@2.2.27": "patches/ai@2.2.27.patch",
 		}
 	}
 }

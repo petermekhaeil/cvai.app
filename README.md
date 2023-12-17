@@ -9,7 +9,7 @@ Visit: [www.cvai.app](https://www.cvai.app/)
 This site uses OpenAI’s new [GPT-4 with Vision](https://platform.openai.com/docs/guides/vision) model.
 It first converts the PDF to an image, constructs a prompt based on the resume and the job description, sends it to GPT-4 API, then streams the response back to the application.
 
-- [Supabase](https://supabase.com/) - Auth
+- [Supabase](https://supabase.com/) - Database
 - [SvelteKit](https://kit.svelte.dev/) - Framework
 - [Shadcn-Svelte](https://www.shadcn-svelte.com/) - UI
 - [Vercel AI SDK](https://sdk.vercel.ai/docs) - AI Streaming

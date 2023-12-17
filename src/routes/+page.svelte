@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { useChat, type Message } from 'ai/svelte';
 	import { Loader2, Copy, UploadCloud, HelpCircle, ExternalLink } from 'lucide-svelte';
 	import * as pdfjs from 'pdfjs-dist';
@@ -10,27 +12,22 @@
 	import { addToast } from '$lib/components/ui/toast/toaster.svelte';
 	import FileDrop from '$lib/components/file-drop.svelte';
 	import ImageCarousel from '$lib/components/image-carousel.svelte';
-	import { signIn, signOut } from '@auth/sveltekit/client';
 
 	pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 	export let data;
-	let { useOwnKey } = data;
+	let { user, useOwnKey } = data;
+	$: ({ user } = data);
 
 	let convertedImages: string[] = [];
 	let numPages = 0;
 	let lastAssistantMessage: Message | null = null;
 	let apiKey = '';
 	let credits = 0;
-	let user: any = null;
 
-	import { page } from '$app/stores';
-
-	console.log('$page.data.session', $page.data.session);
-
-	// $: {
-	// 	credits = user ? user.credits : 0;
-	// }
+	$: {
+		credits = user?.credits ?? 0;
+	}
 
 	const { isLoading, input, handleSubmit, messages } = useChat({
 		api: '/api/completion',
@@ -44,7 +41,7 @@
 			});
 		},
 		onResponse: () => {
-			credits--;
+			credits = Math.max(credits - 1, 0);
 		}
 	});
 

@@ -57,7 +57,7 @@
 	},
 	"pnpm": {
 		"patchedDependencies": {
-			"ai@2.2.27": "patches/ai@2.2.27.patch",
+			"ai@2.2.27": "patches/ai@2.2.27.patch"
 		}
 	}
 }

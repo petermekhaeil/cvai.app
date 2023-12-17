@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { useChat, type Message } from 'ai/svelte';
 	import { Loader2, Copy, UploadCloud, HelpCircle, ExternalLink } from 'lucide-svelte';
 	import * as pdfjs from 'pdfjs-dist';
@@ -24,7 +26,7 @@
 	let credits = 0;
 
 	$: {
-		credits = user ? user.credits : 0;
+		credits = user?.credits ?? 0;
 	}
 
 	const { isLoading, input, handleSubmit, messages } = useChat({
@@ -39,7 +41,7 @@
 			});
 		},
 		onResponse: () => {
-			credits--;
+			credits = Math.max(credits - 1, 0);
 		}
 	});
 
@@ -169,13 +171,11 @@
 	<div class="sticky top-0 bg-white z-30 px-4 flex items-center justify-between py-2 border-b">
 		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight">📝 cvAI</h1>
 		<div class="flex justify-end flex-1 space-x-8">
-			{#if user}
-				<form method="post" action="?/signout">
-					<Button variant="link">{credits} credit{credits > 1 ? 's' : ''} left</Button>
-					<Button variant="link" type="submit">Sign Out</Button>
-				</form>
+			{#if $page.data.session}
+				<Button variant="link">{credits} credit{credits > 1 ? 's' : ''} left</Button>
+				<Button variant="link" on:click={() => signOut()}>Sign Out</Button>
 			{:else}
-				<Button href="/signin">Sign in</Button>
+				<Button on:click={() => signIn('github')}>Sign in</Button>
 			{/if}
 		</div>
 	</div>

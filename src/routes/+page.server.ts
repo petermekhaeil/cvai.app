@@ -1,14 +1,12 @@
-import { redirect } from '@sveltejs/kit'
 import { OPENAI_API_KEY } from '$env/static/private';
 
-export const load = async ({ locals: { supabase, getSession } }) => {
-  const session = await getSession()
-
-  const useOwnKey = OPENAI_API_KEY === '';
+export const load = async (event) => {
+  const session = await event.locals.getSession();
+  const supabase = event.locals.supabase;
 
   let user = null;
 
-  if (session) {
+  if (session?.user) {
     const { data } = await supabase
       .from('users')
       .select('*')
@@ -18,15 +16,7 @@ export const load = async ({ locals: { supabase, getSession } }) => {
     user = data;
   }
 
-  return { session, useOwnKey, user }
-}
+  const useOwnKey = OPENAI_API_KEY === '';
 
-export const actions = {
-  signout: async ({ locals: { supabase, getSession } }) => {
-    const session = await getSession()
-    if (session) {
-      await supabase.auth.signOut()
-      throw redirect(303, '/')
-    }
-  },
+  return { user, useOwnKey }
 }

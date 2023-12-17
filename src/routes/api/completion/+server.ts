@@ -61,7 +61,7 @@ export async function POST(event) {
 	const { locals: { supabase, getSession } } = event;
 	const session = await getSession();
 
-	if (!session) {
+	if (!session?.user) {
 		throw error(401, { message: 'Login required.' });
 	}
 
@@ -89,7 +89,7 @@ export async function POST(event) {
 
 	const { data: user } = await supabase
 		.from('users')
-		.select('credits')
+		.select('*')
 		.eq('id', session.user.id)
 		.single();
 

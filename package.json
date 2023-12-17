@@ -34,6 +34,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@auth/core": "^0.18.6",
+		"@auth/supabase-adapter": "^0.1.12",
+		"@auth/sveltekit": "^0.4.0",
 		"@melt-ui/svelte": "^0.64.4",
 		"@supabase/auth-ui-shared": "^0.1.8",
 		"@supabase/auth-ui-svelte": "^0.2.8",
@@ -45,6 +48,7 @@
 		"ai": "^2.2.27",
 		"bits-ui": "^0.9.9",
 		"clsx": "^2.0.0",
+		"jose": "^5.1.3",
 		"lucide-svelte": "^0.294.0",
 		"openai": "^4.20.1",
 		"pdfjs-dist": "^4.0.269",

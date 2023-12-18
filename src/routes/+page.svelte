@@ -12,6 +12,7 @@
 	import { addToast } from '$lib/components/ui/toast/toaster.svelte';
 	import FileDrop from '$lib/components/file-drop.svelte';
 	import ImageCarousel from '$lib/components/image-carousel.svelte';
+	import UserNav from '$lib/components/user-nav.svelte';
 
 	pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -170,14 +171,14 @@
 <div class="antialiased flex flex-col lg:block w-full">
 	<div class="sticky top-0 bg-white z-30 px-4 flex items-center justify-between py-2 border-b">
 		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight">📝 cvAI</h1>
-		<div class="flex justify-end flex-1 space-x-8">
 			{#if $page.data.session}
-				<Button variant="link">{credits} credit{credits > 1 ? 's' : ''} left</Button>
-				<Button variant="link" on:click={() => signOut()}>Sign Out</Button>
+				<div class="flex items-center sm:space-x-4 justify-end">
+					<Button variant="link">{credits} credit{credits > 1 ? 's' : ''} left</Button>
+					<UserNav />
+				</div>
 			{:else}
 				<Button on:click={() => signIn('github')}>Sign in</Button>
 			{/if}
-		</div>
 	</div>
 	<div class="flex-1 min-h-[calc(100svh-51px)] flex flex-col">
 		<form class="flex-1 flex flex-col" on:submit={handleGenerate}>

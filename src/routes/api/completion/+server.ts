@@ -10,10 +10,6 @@ import type {
 	ChatCompletionCreateParams
 } from 'openai/resources/index.mjs';
 
-export const config = {
-	runtime: 'edge'
-};
-
 let kv: VercelKV;
 let ratelimit: Ratelimit;
 

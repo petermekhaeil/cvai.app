@@ -1,23 +1,24 @@
-import type { Handle } from "@sveltejs/kit"
+import type { Handle } from "@sveltejs/kit";
+import { building } from '$app/environment';
 import { sequence } from '@sveltejs/kit/hooks';
 import { SvelteKitAuth } from "@auth/sveltekit"
 import GitHub from "@auth/sveltekit/providers/github"
-import { AUTH_GITHUB_ID, AUTH_GITHUB_SECRET, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_JWT_SECRET } from "$env/static/private"
+import { AUTH_GITHUB_ID, AUTH_GITHUB_SECRET, AUTH_SECRET, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_JWT_SECRET } from "$env/static/private"
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
 import { SupabaseAdapter } from "@auth/supabase-adapter"
 import { createClient } from "@supabase/supabase-js"
-import {SignJWT, type JWTPayload} from 'jose';
+import { SignJWT, type JWTPayload } from 'jose';
 
 export async function sign(payload: JWTPayload, secret: string): Promise<string> {
   const iat = Math.floor(Date.now() / 1000);
-  const exp = iat + 60* 60; // one hour
+  const exp = iat + 60 * 60; // one hour
 
-  return new SignJWT({...payload})
-      .setProtectedHeader({alg: 'HS256', typ: 'JWT'})
-      .setExpirationTime(exp)
-      .setIssuedAt(iat)
-      .setNotBefore(iat)
-      .sign(new TextEncoder().encode(secret));
+  return new SignJWT({ ...payload })
+    .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+    .setExpirationTime(exp)
+    .setIssuedAt(iat)
+    .setNotBefore(iat)
+    .sign(new TextEncoder().encode(secret));
 }
 
 const auth = SvelteKitAuth({
@@ -26,6 +27,8 @@ const auth = SvelteKitAuth({
     url: PUBLIC_SUPABASE_URL,
     secret: SUPABASE_SERVICE_ROLE_KEY,
   }),
+  secret: AUTH_SECRET,
+  trustHost: true,
   callbacks: {
     async session({ session, user }) {
       const signingSecret = SUPABASE_JWT_SECRET;
@@ -72,4 +75,4 @@ const db: Handle = async ({ event, resolve }) => {
   })
 }
 
-export const handle = sequence(auth, db);
+export const handle = building ? undefined : sequence(auth, db);

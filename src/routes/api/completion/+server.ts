@@ -90,7 +90,7 @@ export async function POST(event) {
 		.single();
 
 
-		if (!user) {
+	if (!user) {
 		error(400, { message: 'User not found.' });
 	}
 

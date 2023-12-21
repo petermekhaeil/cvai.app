@@ -5,7 +5,7 @@ export const load: PageServerLoad = async ({ url, locals: { getSession } }) => {
   const session = await getSession()
 
   if (session) {
-    throw redirect(303, '/')
+    redirect(303, '/');
   }
 
   return { url: url.origin }

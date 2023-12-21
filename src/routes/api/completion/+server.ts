@@ -58,7 +58,7 @@ export async function POST(event) {
 	const session = await getSession();
 
 	if (!session?.user) {
-		throw error(401, { message: 'Login required.' });
+		error(401, { message: 'Login required.' });
 	}
 
 	if (KV_REST_API_URL && KV_REST_API_TOKEN) {
@@ -89,12 +89,13 @@ export async function POST(event) {
 		.eq('id', session.user.id)
 		.single();
 
+
 	if (!user) {
-		throw error(400, { message: 'User not found.' });
+		error(400, { message: 'User not found.' });
 	}
 
 	if (user.credits === 0) {
-		throw error(400, { message: 'You have no generations left' });
+		error(400, { message: 'You have no generations left' });
 	}
 
 	await supabase

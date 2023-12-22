@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { useChat, type Message } from 'ai/svelte';
 	import { Loader2, Copy, UploadCloud, HelpCircle, ExternalLink } from 'lucide-svelte';
 	import * as pdfjs from 'pdfjs-dist';
 	import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs?url';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -171,14 +170,14 @@
 <div class="antialiased flex flex-col lg:block w-full">
 	<div class="sticky top-0 bg-white z-30 px-4 flex items-center justify-between py-2 border-b">
 		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight">📝 cvAI</h1>
-			{#if $page.data.session}
-				<div class="flex items-center sm:space-x-4 justify-end">
-					<Button variant="link">{credits} credit{credits > 1 ? 's' : ''} left</Button>
-					<UserNav />
-				</div>
-			{:else}
-				<Button on:click={() => signIn('github')}>Sign in</Button>
-			{/if}
+		{#if $page.data.session}
+			<div class="flex items-center sm:space-x-4 justify-end">
+				<Button variant="link">{credits} credit{credits > 1 ? 's' : ''} left</Button>
+				<UserNav />
+			</div>
+		{:else}
+			<a class={buttonVariants({ size: 'default' })} href="/signin">Sign in</a>
+		{/if}
 	</div>
 	<div class="flex-1 min-h-[calc(100svh-51px)] flex flex-col">
 		<form class="flex-1 flex flex-col" on:submit={handleGenerate}>

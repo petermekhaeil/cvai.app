@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { Auth } from '@supabase/auth-ui-svelte';
-	import { ThemeSupa } from '@supabase/auth-ui-shared';
-
-	export let data;
+	import { Button } from '$lib/components/ui/button';
+	import IconGitHub from '$lib/components/icon-github.svelte';
+	import { signIn } from '@auth/sveltekit/client';
 </script>
 
 <div class="antialiased flex flex-col w-full min-h-screen">
@@ -18,16 +17,9 @@
 				Sign in below to create a free account and redesign your CV today. You will get
 				<b>5 generations</b> for free.
 			</div>
-			<Auth
-				supabaseClient={data.supabase}
-				providers={['github', 'google']}
-				redirectTo={`${data.url}/auth/callback`}
-				onlyThirdPartyProviders={true}
-				appearance={{
-					theme: ThemeSupa
-				}}
-				theme="light"
-			/>
+			<Button variant="outline" type="button" on:click={() => signIn('github')}>
+				<IconGitHub class="mr-2 h-4 w-4" /> Sign in with Github
+			</Button>
 		</div>
 	</main>
 </div>

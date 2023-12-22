@@ -54,7 +54,9 @@ type RequestPayload = {
 };
 
 export async function POST(event) {
-	const { locals: { supabase, getSession } } = event;
+	const {
+		locals: { supabase, getSession }
+	} = event;
 	const session = await getSession();
 
 	if (!session?.user) {
@@ -88,7 +90,6 @@ export async function POST(event) {
 		.select('*')
 		.eq('id', session.user.id)
 		.single();
-
 
 	if (!user) {
 		error(400, { message: 'User not found.' });

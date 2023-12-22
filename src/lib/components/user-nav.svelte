@@ -2,10 +2,10 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
-	import {  signOut } from '@auth/sveltekit/client';
+	import { signOut } from '@auth/sveltekit/client';
 	import { page } from '$app/stores';
 
-    type Image = string | null | undefined;
+	type Image = string | null | undefined;
 
 	let initals = '';
 

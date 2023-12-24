@@ -12,8 +12,9 @@ import {
 } from '$env/static/private';
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 import { SupabaseAdapter } from '@auth/supabase-adapter';
-import { createClient } from '@supabase/supabase-js';
+import { createServerClient } from '@supabase/ssr';
 import { SignJWT, type JWTPayload } from 'jose';
+import type { Database } from '$lib/database.types';
 
 export async function sign(payload: JWTPayload, secret: string): Promise<string> {
 	const iat = Math.floor(Date.now() / 1000);
@@ -68,13 +69,22 @@ const db: Handle = async ({ event, resolve }) => {
 
 	const { supabaseAccessToken } = session;
 
-	event.locals.supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
-		global: {
-			headers: {
-				Authorization: `Bearer ${supabaseAccessToken}`
+	event.locals.supabase = createServerClient<Database>(
+		PUBLIC_SUPABASE_URL,
+		PUBLIC_SUPABASE_ANON_KEY,
+		{
+			cookies: {
+				get: (key) => event.cookies.get(key),
+				set: (key, value, options) => event.cookies.set(key, value, { ...options, path: '/' }),
+				remove: (key, options) => event.cookies.delete(key, { ...options, path: '/' })
+			},
+			global: {
+				headers: {
+					Authorization: `Bearer ${supabaseAccessToken}`
+				}
 			}
 		}
-	});
+	);
 
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {

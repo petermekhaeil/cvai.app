@@ -1,9 +1,8 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { useChat, type Message } from 'ai/svelte';
 	import { Loader2, Copy, UploadCloud, HelpCircle, ExternalLink } from 'lucide-svelte';
-	import * as pdfjs from 'pdfjs-dist';
-	import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs?url';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Textarea } from '$lib/components/ui/textarea';
@@ -12,8 +11,6 @@
 	import FileDrop from '$lib/components/file-drop.svelte';
 	import ImageCarousel from '$lib/components/image-carousel.svelte';
 	import UserNav from '$lib/components/user-nav.svelte';
-
-	pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 	export let data;
 	let { user, useOwnKey } = data;
@@ -28,6 +25,16 @@
 	$: {
 		credits = user?.credits ?? 0;
 	}
+
+	let pdfjs: typeof import('pdfjs-dist');
+
+	onMount(async () => {
+		const pdf = await import('pdfjs-dist');
+		const pdfjsWorker = await import('pdfjs-dist/build/pdf.worker.min.mjs?url');
+		pdf.GlobalWorkerOptions.workerSrc = pdfjsWorker.default;
+
+		pdfjs = pdf;
+	});
 
 	const { isLoading, input, handleSubmit, messages } = useChat({
 		api: '/api/completion',
@@ -73,7 +80,10 @@
 						canvas.height = viewport.height;
 
 						if (context) {
-							const renderTask = page.render({ canvasContext: context, viewport });
+							const renderTask = page.render({
+								canvasContext: context,
+								viewport
+							});
 							renderTask.promise.then(() => {
 								const imgData = canvas.toDataURL('image/png');
 								resolve(imgData);

@@ -6,7 +6,9 @@
 
 <div class="antialiased flex flex-col w-full min-h-screen">
 	<div class="sticky top-0 bg-white z-30 px-4 flex items-center justify-between py-2 border-b">
-		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight"><a href="/">📝 cvAI</a></h1>
+		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight">
+			<a href="/">📝 cvAI</a>
+		</h1>
 	</div>
 	<main class="flex flex-1 w-full flex-col items-center justify-center text-center px-4 mt-4">
 		<h1 class="mx-auto font-display text-4xl font-bold sm:text-6xl mb-5">

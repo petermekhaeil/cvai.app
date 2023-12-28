@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import IconGitHub from '$lib/components/icon-github.svelte';
+	import IconGoogle from '$lib/components/icon-google.svelte';
 	import { signIn } from '@auth/sveltekit/client';
 </script>
 
@@ -20,7 +21,10 @@
 				<b>5 generations</b> for free.
 			</div>
 			<Button variant="outline" type="button" on:click={() => signIn('github')}>
-				<IconGitHub class="mr-2 h-4 w-4" /> Sign in with Github
+				<IconGitHub class="mr-2 h-5 w-5" /> Sign in with Github
+			</Button>
+			<Button variant="outline" type="button" on:click={() => signIn('google')}>
+				<IconGoogle class="mr-2 h-5 w-5" /> Sign in with Google
 			</Button>
 		</div>
 	</main>

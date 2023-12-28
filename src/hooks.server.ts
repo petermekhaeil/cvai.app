@@ -2,10 +2,14 @@ import type { Handle } from '@sveltejs/kit';
 import { building } from '$app/environment';
 import { sequence } from '@sveltejs/kit/hooks';
 import { SvelteKitAuth } from '@auth/sveltekit';
-import GitHub from '@auth/sveltekit/providers/github';
+import GitHubProvider from '@auth/sveltekit/providers/github';
+import GoogleProvider from '@auth/sveltekit/providers/google';
+
 import {
 	AUTH_GITHUB_ID,
 	AUTH_GITHUB_SECRET,
+	AUTH_GOOGLE_CLIENT_ID,
+	AUTH_GOOGLE_CLIENT_SECRET,
 	AUTH_SECRET,
 	SUPABASE_SERVICE_ROLE_KEY,
 	SUPABASE_JWT_SECRET
@@ -29,7 +33,10 @@ export async function sign(payload: JWTPayload, secret: string): Promise<string>
 }
 
 const auth = SvelteKitAuth({
-	providers: [GitHub({ clientId: AUTH_GITHUB_ID, clientSecret: AUTH_GITHUB_SECRET })],
+	providers: [
+		GitHubProvider({ clientId: AUTH_GITHUB_ID, clientSecret: AUTH_GITHUB_SECRET }),
+		GoogleProvider({ clientId: AUTH_GOOGLE_CLIENT_ID, clientSecret: AUTH_GOOGLE_CLIENT_SECRET })
+	],
 	adapter: SupabaseAdapter({
 		url: PUBLIC_SUPABASE_URL,
 		secret: SUPABASE_SERVICE_ROLE_KEY

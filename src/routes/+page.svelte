@@ -205,10 +205,11 @@
 											class="flex flex-col items-center justify-center w-full h-64 border border-zinc-300 rounded-md cursor-pointer bg-zinc-50 hover:bg-zinc-200"
 										>
 											<div class="flex flex-col items-center justify-center pt-5 pb-6">
-												<UploadCloud class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
-												<p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+												<UploadCloud class="w-8 h-8 mb-4 text-gray-500" />
+												<p class="mb-2 text-sm text-gray-500">
 													<span class="font-semibold">Click to upload</span> or drag and drop
 												</p>
+												<p class="text-xs text-gray-500">Only PDF files are supported</p>
 											</div>
 										</label>
 									</div>

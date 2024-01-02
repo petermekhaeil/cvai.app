@@ -1,6 +1,8 @@
-# cvAI
+# 📝 cvAI
 
 AI-powered resume and cover letter builder.
+
+https://github.com/petermekhaeil/cvai.app/assets/4616064/897d74b3-436b-448f-a9fb-81dc266abefc
 
 Visit: [www.cvai.app](https://www.cvai.app/)
 

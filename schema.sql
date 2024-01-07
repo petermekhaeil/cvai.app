@@ -129,3 +129,19 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_created
   after insert on next_auth.users
   for each row execute procedure public.handle_new_user();
+
+create table history (
+  id serial not null primary key,
+  user_id uuid not null,
+  created_at timestamp with time zone default now(),
+  job_description text not null,
+  cv text not null,
+  constraint "user_history_user_id_fkey" foreign key ("user_id")
+        references  users (id) match simple
+        on update no action
+        on delete cascade
+);
+
+alter table history enable row level security;
+create policy "Can view own history." on history for select using (next_auth.uid() = user_id);
+create policy "Can update own history." on history for update using (next_auth.uid() = user_id);

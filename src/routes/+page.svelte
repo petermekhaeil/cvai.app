@@ -7,7 +7,6 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import * as Tabs from '$lib/components/ui/tabs';
 	import { addToast } from '$lib/components/ui/toast/toaster.svelte';
 	import FileDrop from '$lib/components/file-drop.svelte';
 	import ImageCarousel from '$lib/components/image-carousel.svelte';
@@ -195,149 +194,122 @@
 			<div class="flex-1 flex lg:justify-between">
 				<div class="w-full flex flex-col md:flex-row">
 					<div class="relative py-4 px-4 flex-initial flex flex-col md:w-[760px]">
-						<Tabs.Root value="new">
-							<Tabs.List>
-								<Tabs.Trigger value="new">New</Tabs.Trigger>
-								<Tabs.Trigger value="history">History</Tabs.Trigger>
-							</Tabs.List>
-							<Tabs.Content value="new">
-								<div class="grid w-full items-center gap-4 overflow-hidden">
-									{#if convertedImages.length > 0}
-										<ImageCarousel images={convertedImages} />
-									{:else}
-										<FileDrop handleFiles={handleFileSelect} name="resume">
-											<div class="flex items-center justify-center w-full">
-												<label
-													for="resume"
-													class="flex flex-col items-center justify-center w-full h-64 border border-zinc-300 rounded-md cursor-pointer bg-zinc-50 hover:bg-zinc-200"
-												>
-													<div class="flex flex-col items-center justify-center pt-5 pb-6">
-														<UploadCloud class="w-8 h-8 mb-4 text-gray-500" />
-														<p class="mb-2 text-sm text-gray-500">
-															<span class="font-semibold">Click to upload</span> or drag and drop
-														</p>
-														<p class="text-xs text-gray-500">Only PDF files are supported</p>
-													</div>
-												</label>
+						<div class="grid w-full items-center gap-4 overflow-hidden">
+							{#if convertedImages.length > 0}
+								<ImageCarousel images={convertedImages} />
+							{:else}
+								<FileDrop handleFiles={handleFileSelect} name="resume">
+									<div class="flex items-center justify-center w-full">
+										<label
+											for="resume"
+											class="flex flex-col items-center justify-center w-full h-64 border border-zinc-300 rounded-md cursor-pointer bg-zinc-50 hover:bg-zinc-200"
+										>
+											<div class="flex flex-col items-center justify-center pt-5 pb-6">
+												<UploadCloud class="w-8 h-8 mb-4 text-gray-500" />
+												<p class="mb-2 text-sm text-gray-500">
+													<span class="font-semibold">Click to upload</span> or drag and drop
+												</p>
+												<p class="text-xs text-gray-500">Only PDF files are supported</p>
 											</div>
-										</FileDrop>
-									{/if}
-									<Textarea
-										placeholder="Enter job description"
-										id="jobDescription"
-										rows={10}
-										bind:value={$input}
-										spellcheck="false"
-										class="h-full min-h-[256px] rounded-md flex-1 sm:text-sm text-base bg-gray-50 border border-zinc-300 hover:border-zinc-300 resize-none scroll-m-2 transition-colors focus:border-gray-400 focus:ring-0 focus:outline-none pb-12 focus-visible:ring-0"
-									/>
-									{#if useOwnKey}
-										<div class="flex gap-4">
-											<Input
-												type="text"
-												placeholder="Your OpenAI API Key"
-												bind:value={apiKey}
-												class="bg-gray-50 border border-zinc-300 hover:border-zinc-300 focus-visible:ring-0 focus:border-gray-400 focus:ring-0 focus:outline-none"
-											/>
-											<Dialog.Root>
-												<Dialog.Trigger>
-													<HelpCircle />
-												</Dialog.Trigger>
-												<Dialog.Content class="md:min-w-[800px]">
-													<Dialog.Header>
-														<Dialog.Title>OpenAI API Key</Dialog.Title>
-													</Dialog.Header>
-													<div class="grid gap-4 py-4">
-														<p class="mb-2 leading-normal text-muted-foreground">
-															This site uses OpenAI’s new GPT-4 with Vision model. You will need to
-															create an OpenAI account and get your API key from
-															<a
-																href="https://platform.openai.com"
-																target="_blank"
-																class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
-															>
-																<span>platform.openai.com</span>
-																<ExternalLink class="h-3 w-3" />
-															</a>.
-														</p>
-														<ul class="ml-6 list-decimal [&>li]:mt-2 text-muted-foreground">
-															<li>
-																Create an OpenAI account at
-																<a
-																	href="https://platform.openai.com"
-																	target="_blank"
-																	class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
-																>
-																	<span>platform.openai.com</span>
-																	<ExternalLink class="h-3 w-3" />
-																</a>
-															</li>
-															<li>
-																In your OpenAI API account, navigate to
-																<a
-																	href="https://platform.openai.com/account/billing/overview"
-																	target="_blank"
-																	class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
-																>
-																	<span>Settings > Billing</span>
-																	<ExternalLink class="h-3 w-3" />
-																</a>
-															</li>
-															<li>Click Add to credit balance</li>
-															<li>Add at least $5 to your account</li>
-															<li>
-																Navigate to
-																<a
-																	href="https://platform.openai.com/api-keys"
-																	target="_blank"
-																	class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
-																>
-																	<span>API Keys</span>
-																	<ExternalLink class="h-3 w-3" />
-																</a>
-															</li>
-															<li>Click Create new secret key</li>
-															<li>Copy the key to your clipboard.</li>
-															<li>Back on cvai.app, paste the key into the API key text box</li>
-														</ul>
-														<p class="mb-2 leading-normal text-muted-foreground">
-															This key is only used in your browser and is not stored on the server.
-														</p>
-														<p class="mb-2 leading-normal text-muted-foreground">
-															Read the <a
-																href="https://github.com/petermekhaeil/cvai.app"
-																class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
-															>
-																<span>source code</span>
-																<ExternalLink class="h-3 w-3" />
-															</a> to see how your data is used.
-														</p>
-													</div>
-												</Dialog.Content>
-											</Dialog.Root>
-										</div>
-									{/if}
-									<div class="space-x-2 flex items-center">
-										<Button
-											class="disabled:cursor-not-allowed"
-											variant="default"
-											type="submit"
-											disabled={$isLoading}
-										>
-											{#if $isLoading}
-												<Loader2 class="mr-2 h-4 w-4 animate-spin" />
-												Generating
-											{:else}
-												Generate
-											{/if}
-										</Button>
-										<Button variant="outline" on:click={handleStartOver} type="button"
-											>Start Over</Button
-										>
+										</label>
 									</div>
+								</FileDrop>
+							{/if}
+							<Textarea
+								placeholder="Enter job description"
+								id="jobDescription"
+								rows={10}
+								bind:value={$input}
+								spellcheck="false"
+								class="h-full min-h-[256px] rounded-md flex-1 sm:text-sm text-base bg-gray-50 border border-zinc-300 hover:border-zinc-300 resize-none scroll-m-2 transition-colors focus:border-gray-400 focus:ring-0 focus:outline-none pb-12 focus-visible:ring-0"
+							/>
+							{#if useOwnKey}
+								<div class="flex gap-4">
+									<Input
+										type="text"
+										placeholder="Your OpenAI API Key"
+										bind:value={apiKey}
+										class="bg-gray-50 border border-zinc-300 hover:border-zinc-300 focus-visible:ring-0 focus:border-gray-400 focus:ring-0 focus:outline-none"
+									/>
+									<Dialog.Root>
+										<Dialog.Trigger>
+											<HelpCircle />
+										</Dialog.Trigger>
+										<Dialog.Content class="md:min-w-[800px]">
+											<Dialog.Header>
+												<Dialog.Title>OpenAI API Key</Dialog.Title>
+											</Dialog.Header>
+											<div class="grid gap-4 py-4">
+												<p class="mb-2 leading-normal text-muted-foreground">
+													This site uses OpenAI’s new GPT-4 with Vision model. You will need to
+													create an OpenAI account and get your API key from
+													<a
+														href="https://platform.openai.com"
+														target="_blank"
+														class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
+													>
+														<span>platform.openai.com</span>
+														<ExternalLink class="h-3 w-3" />
+													</a>.
+												</p>
+												<ul class="ml-6 list-decimal [&>li]:mt-2 text-muted-foreground">
+													<li>
+														Create an OpenAI account at
+														<a
+															href="https://platform.openai.com"
+															target="_blank"
+															class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
+														>
+															<span>platform.openai.com</span>
+															<ExternalLink class="h-3 w-3" />
+														</a>
+													</li>
+													<li>
+														In your OpenAI API account, navigate to
+														<a
+															href="https://platform.openai.com/account/billing/overview"
+															target="_blank"
+															class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
+														>
+															<span>Settings > Billing</span>
+															<ExternalLink class="h-3 w-3" />
+														</a>
+													</li>
+													<li>Click Add to credit balance</li>
+													<li>Add at least $5 to your account</li>
+													<li>
+														Navigate to
+														<a
+															href="https://platform.openai.com/api-keys"
+															target="_blank"
+															class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
+														>
+															<span>API Keys</span>
+															<ExternalLink class="h-3 w-3" />
+														</a>
+													</li>
+													<li>Click Create new secret key</li>
+													<li>Copy the key to your clipboard.</li>
+													<li>Back on cvai.app, paste the key into the API key text box</li>
+												</ul>
+												<p class="mb-2 leading-normal text-muted-foreground">
+													This key is only used in your browser and is not stored on the server.
+												</p>
+												<p class="mb-2 leading-normal text-muted-foreground">
+													Read the <a
+														href="https://github.com/petermekhaeil/cvai.app"
+														class="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
+													>
+														<span>source code</span>
+														<ExternalLink class="h-3 w-3" />
+													</a> to see how your data is used.
+												</p>
+											</div>
+										</Dialog.Content>
+									</Dialog.Root>
 								</div>
-							</Tabs.Content>
-							<Tabs.Content value="history"></Tabs.Content>
-						</Tabs.Root>
+							{/if}
+						</div>
 					</div>
 					<div
 						class="md:divide-x md:divide-y-0 divide-y border-t md:border-t-0 md:border-l bg-zinc-50 flex flex-col md:flex-row h-full w-full"
@@ -392,7 +364,22 @@
 			<div
 				class="sticky bottom-0 left-0 right-0 w-full border-t h-[64px] -mt-16 bg-zinc-50 z-30 px-4 lg:px-6 flex items-center justify-between py-2"
 			>
-				<div></div>
+				<div class="space-x-2 flex items-center">
+					<Button
+						class="disabled:cursor-not-allowed"
+						variant="default"
+						type="submit"
+						disabled={$isLoading}
+					>
+						{#if $isLoading}
+							<Loader2 class="mr-2 h-4 w-4 animate-spin" />
+							Generating
+						{:else}
+							Generate
+						{/if}
+					</Button>
+					<Button variant="outline" on:click={handleStartOver} type="button">Start Over</Button>
+				</div>
 				<div>
 					<Button
 						href="https://github.com/petermekhaeil/cvai.app/issues/new?template=feature_request.yml"

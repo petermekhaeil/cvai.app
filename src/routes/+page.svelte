@@ -49,6 +49,12 @@
 		},
 		onResponse: () => {
 			credits = Math.max(credits - 1, 0);
+		},
+		onFinish: (message) => {
+			fetch('/api/save', {
+				method: 'POST',
+				body: JSON.stringify({ jd: $input, text: message.content })
+			});
 		}
 	});
 

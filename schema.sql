@@ -134,8 +134,8 @@ create table history (
   id serial not null primary key,
   user_id uuid not null,
   created_at timestamp with time zone default now(),
-  job_description text not null,
-  cv text not null,
+  jd text not null,
+  text text not null,
   constraint "user_history_user_id_fkey" foreign key ("user_id")
         references  users (id) match simple
         on update no action
@@ -143,5 +143,6 @@ create table history (
 );
 
 alter table history enable row level security;
+create policy "Can insert own history." on history for insert with check (next_auth.uid() = user_id);
 create policy "Can view own history." on history for select using (next_auth.uid() = user_id);
 create policy "Can update own history." on history for update using (next_auth.uid() = user_id);

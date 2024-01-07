@@ -20,7 +20,7 @@
 
 	const handleCopy = () => {
 		if (selectedHistory) {
-			navigator.clipboard.writeText(selectedHistory.cv);
+			navigator.clipboard.writeText(selectedHistory.text);
 
 			addToast({
 				title: 'Copied',
@@ -62,7 +62,7 @@
 														class="flex items-center gap-2 px-2 py-1.5 hover:bg-zinc-200 transition-colors w-full rounded-md"
 													>
 														<File class="flex-shrink-0 w-4 h-4 stroke-2 stroke-zinc-400" />
-														<div class="text-sm truncate">{history.job_description}</div>
+														<div class="text-sm truncate">{history.jd}</div>
 													</button>
 												</div>
 											{/each}
@@ -91,7 +91,7 @@
 											</button>
 										</div>
 										<div>
-											{selectedHistory.cv}
+											{selectedHistory.text}
 										</div>
 									</div>
 								{/if}

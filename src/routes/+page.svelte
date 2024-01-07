@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
 	import { useChat, type Message } from 'ai/svelte';
 	import { Loader2, Copy, UploadCloud, HelpCircle, ExternalLink } from 'lucide-svelte';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { addToast } from '$lib/components/ui/toast/toaster.svelte';
 	import FileDrop from '$lib/components/file-drop.svelte';
 	import ImageCarousel from '$lib/components/image-carousel.svelte';
-	import UserNav from '$lib/components/user-nav.svelte';
+	import Footer from '$lib/components/footer.svelte';
+	import Header from '$lib/components/header.svelte';
 
 	export let data;
 	let { user, useOwnKey } = data;
@@ -49,6 +49,12 @@
 		},
 		onResponse: () => {
 			credits = Math.max(credits - 1, 0);
+		},
+		onFinish: (message) => {
+			fetch('/api/save', {
+				method: 'POST',
+				body: JSON.stringify({ jd: $input, text: message.content })
+			});
 		}
 	});
 
@@ -178,17 +184,7 @@
 </script>
 
 <div class="antialiased flex flex-col lg:block w-full">
-	<div class="sticky top-0 bg-white z-30 px-4 flex items-center justify-between py-2 border-b">
-		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight">📝 cvAI</h1>
-		{#if $page.data.session}
-			<div class="flex items-center sm:space-x-4 justify-end">
-				<Button variant="link">{credits} credit{credits > 1 ? 's' : ''} left</Button>
-				<UserNav />
-			</div>
-		{:else}
-			<a class={buttonVariants({ size: 'default' })} href="/signin">Sign in</a>
-		{/if}
-	</div>
+	<Header {credits} />
 	<div class="flex-1 min-h-[calc(100svh-51px)] flex flex-col">
 		<form class="flex-1 flex flex-col" on:submit={handleGenerate}>
 			<div class="flex-1 flex lg:justify-between">
@@ -361,55 +357,22 @@
 					</div>
 				</div>
 			</div>
-			<div
-				class="sticky bottom-0 left-0 right-0 w-full border-t h-[64px] -mt-16 bg-zinc-50 z-30 px-4 lg:px-6 flex items-center justify-between py-2"
-			>
-				<div class="space-x-2 flex items-center">
-					<Button
-						class="disabled:cursor-not-allowed"
-						variant="default"
-						type="submit"
-						disabled={$isLoading}
-					>
-						{#if $isLoading}
-							<Loader2 class="mr-2 h-4 w-4 animate-spin" />
-							Generating
-						{:else}
-							Generate
-						{/if}
-					</Button>
-					<Button variant="outline" on:click={handleStartOver} type="button">Start Over</Button>
-				</div>
-				<div>
-					<Button
-						href="https://github.com/petermekhaeil/cvai.app/issues/new?template=feature_request.yml"
-						variant="link"
-						target="_blank"
-						class="inline-flex items-center text-zinc-500"
-					>
-						<span>Feature Request</span>
-						<ExternalLink class="ml-1 h-3 w-3" />
-					</Button>
-					<Button
-						href="https://github.com/petermekhaeil/cvai.app"
-						variant="link"
-						target="_blank"
-						class="items-center text-zinc-500 hidden md:inline-flex"
-					>
-						<span>Source code</span>
-						<ExternalLink class="ml-1 h-3 w-3" />
-					</Button>
-					<Button
-						href="https://twitter.com/petermekh"
-						variant="link"
-						target="_blank"
-						class="items-center text-zinc-500 hidden md:inline-flex"
-					>
-						<span>By Peter Mekhaeil</span>
-						<ExternalLink class="ml-1 h-3 w-3" />
-					</Button>
-				</div>
-			</div>
+			<Footer>
+				<Button
+					class="disabled:cursor-not-allowed"
+					variant="default"
+					type="submit"
+					disabled={$isLoading}
+				>
+					{#if $isLoading}
+						<Loader2 class="mr-2 h-4 w-4 animate-spin" />
+						Generating
+					{:else}
+						Generate
+					{/if}
+				</Button>
+				<Button variant="outline" on:click={handleStartOver} type="button">Start Over</Button>
+			</Footer>
 		</form>
 	</div>
 </div>

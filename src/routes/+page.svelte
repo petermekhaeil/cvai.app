@@ -11,6 +11,7 @@
 	import FileDrop from '$lib/components/file-drop.svelte';
 	import ImageCarousel from '$lib/components/image-carousel.svelte';
 	import UserNav from '$lib/components/user-nav.svelte';
+	import Footer from '$lib/components/footer.svelte';
 
 	export let data;
 	let { user, useOwnKey } = data;
@@ -362,55 +363,22 @@
 					</div>
 				</div>
 			</div>
-			<div
-				class="sticky bottom-0 left-0 right-0 w-full border-t h-[64px] -mt-16 bg-zinc-50 z-30 px-4 lg:px-6 flex items-center justify-between py-2"
-			>
-				<div class="space-x-2 flex items-center">
-					<Button
-						class="disabled:cursor-not-allowed"
-						variant="default"
-						type="submit"
-						disabled={$isLoading}
-					>
-						{#if $isLoading}
-							<Loader2 class="mr-2 h-4 w-4 animate-spin" />
-							Generating
-						{:else}
-							Generate
-						{/if}
-					</Button>
-					<Button variant="outline" on:click={handleStartOver} type="button">Start Over</Button>
-				</div>
-				<div>
-					<Button
-						href="https://github.com/petermekhaeil/cvai.app/issues/new?template=feature_request.yml"
-						variant="link"
-						target="_blank"
-						class="inline-flex items-center text-zinc-500"
-					>
-						<span>Feature Request</span>
-						<ExternalLink class="ml-1 h-3 w-3" />
-					</Button>
-					<Button
-						href="https://github.com/petermekhaeil/cvai.app"
-						variant="link"
-						target="_blank"
-						class="items-center text-zinc-500 hidden md:inline-flex"
-					>
-						<span>Source code</span>
-						<ExternalLink class="ml-1 h-3 w-3" />
-					</Button>
-					<Button
-						href="https://twitter.com/petermekh"
-						variant="link"
-						target="_blank"
-						class="items-center text-zinc-500 hidden md:inline-flex"
-					>
-						<span>By Peter Mekhaeil</span>
-						<ExternalLink class="ml-1 h-3 w-3" />
-					</Button>
-				</div>
-			</div>
+			<Footer>
+				<Button
+					class="disabled:cursor-not-allowed"
+					variant="default"
+					type="submit"
+					disabled={$isLoading}
+				>
+					{#if $isLoading}
+						<Loader2 class="mr-2 h-4 w-4 animate-spin" />
+						Generating
+					{:else}
+						Generate
+					{/if}
+				</Button>
+				<Button variant="outline" on:click={handleStartOver} type="button">Start Over</Button>
+			</Footer>
 		</form>
 	</div>
 </div>

@@ -1,17 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
 	import { useChat, type Message } from 'ai/svelte';
 	import { Loader2, Copy, UploadCloud, HelpCircle, ExternalLink } from 'lucide-svelte';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { addToast } from '$lib/components/ui/toast/toaster.svelte';
 	import FileDrop from '$lib/components/file-drop.svelte';
 	import ImageCarousel from '$lib/components/image-carousel.svelte';
-	import UserNav from '$lib/components/user-nav.svelte';
 	import Footer from '$lib/components/footer.svelte';
+	import Header from '$lib/components/header.svelte';
 
 	export let data;
 	let { user, useOwnKey } = data;
@@ -179,18 +178,7 @@
 </script>
 
 <div class="antialiased flex flex-col lg:block w-full">
-	<div class="sticky top-0 bg-white z-30 px-4 flex items-center justify-between py-2 border-b">
-		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight">📝 cvAI</h1>
-		{#if $page.data.session}
-			<div class="flex items-center justify-end">
-				<Button variant="link" href="/history" class="hidden sm:block">History</Button>
-				<Button variant="link">{credits} credit{credits > 1 ? 's' : ''} left</Button>
-				<UserNav />
-			</div>
-		{:else}
-			<a class={buttonVariants({ size: 'default' })} href="/signin">Sign in</a>
-		{/if}
-	</div>
+	<Header {credits} />
 	<div class="flex-1 min-h-[calc(100svh-51px)] flex flex-col">
 		<form class="flex-1 flex flex-col" on:submit={handleGenerate}>
 			<div class="flex-1 flex lg:justify-between">
